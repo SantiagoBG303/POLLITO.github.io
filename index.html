@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff3b6d">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para mi POLLITO — ¿Cuánto te amo te preguntas?</title>
+  <link rel="stylesheet" href="style3.css">
+</head>
+<body>
+  <header>
+    <h1>¿Cuánto amo a mi pollin? 💖</h1>
+    <p class="intro">POLLITO, esta app la hice solo para ti, mi Pollito. Juega y descubre cuánto te amo.</p>
+  </header>
+
+  <main>
+    <!-- Nombre -->
+    <section class="card">
+      <h2>Tu nombre guardado</h2>
+      <input id="nameInput" type="text" placeholder="Tatiana" />
+      <button id="saveNameBtn">Guardar</button>
+      <p>Para: <strong id="byName">Tatiana</strong></p>
+    </section>
+
+    <!-- Juego de clicks -->
+    <section class="card">
+      <h2>Juego del Amor (toques)</h2>
+      <p>Toques: <span id="taps">0</span></p>
+      <p>Tiempo: <span id="timeLeft">10</span>s</p>
+      <div class="meter"><div id="loveMeter"></div></div>
+      <button id="startGameBtn">Iniciar</button>
+      <button id="tapBtn" disabled>💓 Tócame</button>
+      <button id="resetGameBtn" disabled>Reiniciar</button>
+    </section>
+
+    <!-- Quiz -->
+    <section class="card">
+      <h2>Quiz del Amor</h2>
+      <form id="quizForm">
+        <p>¿Dónde nos conocimos?</p>
+        <label><input type="radio" name="q1" value="a"> En un parque 🌳</label><br>
+        <label><input type="radio" name="q1" value="b"> En una fiesta 🎉</label><br>
+
+        <p>¿Dónde fue nuestra primera cita?</p>
+        <label><input type="radio" name="q2" value="a"> En un restaurante 🍽️</label><br>
+        <label><input type="radio" name="q2" value="b"> En un cine 🎬</label><br>
+
+        <p>¿Cuál es tu apodo?</p>
+        <label><input type="radio" name="q3" value="a"> Princesa 👑</label><br>
+        <label><input type="radio" name="q3" value="b"> Pollito 🐥</label><br>
+      </form>
+      <button id="submitQuizBtn">Enviar Quiz</button>
+      <button id="resetQuizBtn">Reiniciar Quiz</button>
+      <p>Puntaje Quiz: <span id="quizScore">0</span></p>
+    </section>
+
+    <!-- Resultados -->
+    <section class="card">
+      <h2>Resultados</h2>
+      <p>Total Amor: <span id="totalLove">0</span></p>
+      <p id="loveMessage">Sigue jugando, POLLITO…</p>
+      <button id="poemBtn">Ver poema</button>
+      <button id="shareBtn">Compartir 💌</button>
+    </section>
+
+    <!-- Nueva Sorpresa -->
+    <section class="card">
+      <h2>💌 Sorpresa de Amor</h2>
+      <p>Haz clic y recibe un mensaje romántico inesperado:</p>
+      <button id="loveExtraBtn">Dame Amor 💕</button>
+      <p id="loveExtra">Aquí aparecerá tu mensaje, Pollito 🐥</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Hecho con 💖 para Tatiana (Pollito)</p>
+  </footer>
+
+  <script>
+    let taps = 0;
+    let timeLeft = 10;
+    let timerInterval = null;
+    let quizScore = 0;
+
+    const tapsSpan = document.getElementById("taps");
+    const timeLeftSpan = document.getElementById("timeLeft");
+    const loveMeter = document.getElementById("loveMeter");
+    const startGameBtn = document.getElementById("startGameBtn");
+    const tapBtn = document.getElementById("tapBtn");
+    const resetGameBtn = document.getElementById("resetGameBtn");
+
+    const quizForm = document.getElementById("quizForm");
+    const quizScoreSpan = document.getElementById("quizScore");
+    const submitQuizBtn = document.getElementById("submitQuizBtn");
+    const resetQuizBtn = document.getElementById("resetQuizBtn");
+
+    const totalLoveSpan = document.getElementById("totalLove");
+    const loveMessage = document.getElementById("loveMessage");
+
+    const saveNameBtn = document.getElementById("saveNameBtn");
+    const nameInput = document.getElementById("nameInput");
+    const byName = document.getElementById("byName");
+
+    const poemBtn = document.getElementById("poemBtn");
+    const shareBtn = document.getElementById("shareBtn");
+
+    const loveExtraBtn = document.getElementById("loveExtraBtn");
+    const loveExtra = document.getElementById("loveExtra");
+
+    // ---------------------------
+    // Juego de toques
+    function startGame() {
+      taps = 0;
+      timeLeft = 10;
+      tapsSpan.textContent = taps;
+      timeLeftSpan.textContent = timeLeft;
+      loveMeter.style.width = "0%";
+
+      tapBtn.disabled = false;
+      resetGameBtn.disabled = false;
+      startGameBtn.disabled = true;
+
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timeLeftSpan.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function tapHeart() {
+      taps++;
+      tapsSpan.textContent = taps;
+      let percent = Math.min((taps / 50) * 100, 100);
+      loveMeter.style.width = percent + "%";
+    }
+
+    function endGame() {
+      clearInterval(timerInterval);
+      tapBtn.disabled = true;
+      startGameBtn.disabled = false;
+      updateTotalLove();
+    }
+
+    function resetGame() {
+      clearInterval(timerInterval);
+      taps = 0;
+      timeLeft = 10;
+      tapsSpan.textContent = taps;
+      timeLeftSpan.textContent = timeLeft;
+      loveMeter.style.width = "0%";
+
+      tapBtn.disabled = true;
+      resetGameBtn.disabled = true;
+      startGameBtn.disabled = false;
+    }
+
+    // ---------------------------
+    // Quiz
+    function submitQuiz() {
+      let formData = new FormData(quizForm);
+      let score = 0;
+
+      if (formData.get("q1") === "a") score++;
+      if (formData.get("q2") === "b") score++;
+      if (formData.get("q3") === "b") score++;
+
+      quizScore = score;
+      quizScoreSpan.textContent = quizScore;
+      updateTotalLove();
+    }
+
+    function resetQuiz() {
+      quizForm.reset();
+      quizScore = 0;
+      quizScoreSpan.textContent = 0;
+      updateTotalLove();
+    }
+
+    // ---------------------------
+    // Resultados
+    function updateTotalLove() {
+      let total = taps + quizScore * 10;
+      totalLoveSpan.textContent = total;
+
+      if (total < 20) {
+        loveMessage.textContent = "Tatiana, te amo poquito pero sincero 💕";
+      } else if (total < 50) {
+        loveMessage.textContent = "Tatiana, te amo muchísimo, Pollito 🐥💖";
+      } else {
+        loveMessage.textContent = "Tatiana, eres mi TODO, mi Pollito eterno 💍💘";
+      }
+    }
+
+    // ---------------------------
+    // Nombre guardado
+    saveNameBtn.addEventListener("click", () => {
+      let name = nameInput.value || "Tatiana";
+      localStorage.setItem("tatianaName", name);
+      byName.textContent = name;
+    });
+
+    window.addEventListener("load", () => {
+      let saved = localStorage.getItem("tatianaName");
+      if (saved) {
+        byName.textContent = saved;
+        nameInput.value = saved;
+      }
+    });
+
+    // ---------------------------
+    // Poema
+    poemBtn.addEventListener("click", () => {
+      alert(`Tatiana, mi Pollito 🐥
+
+Eres la luz de mis días,
+mi parque de alegría,
+mi cine de sonrisas,
+y mi razón de amar. 💖`);
+    });
+
+    // ---------------------------
+    // Compartir
+    shareBtn.addEventListener("click", async () => {
+      const text = `Tatiana, mi Pollito 🐥 💖
+Mira cuánto te amo en esta app que hice para ti.`;
+      if (navigator.share) {
+        await navigator.share({ title: "Para Tatiana", text });
+      } else {
+        alert("Copia este mensaje para Tatiana:\n\n" + text);
+      }
+    });
+
+    // ---------------------------
+    // Mensajes de Amor Extra
+    const mensajes = [
+      "Tatiana, contigo todo es mejor 💖",
+      "Mi Pollito, eres el regalo más lindo de mi vida 🐥",
+      "Tatiana, gracias por ser mi alegría diaria 🌸",
+      "Eres mi parque de felicidad y mi cine de sonrisas 🎬💕",
+      "Te amo más de lo que las palabras pueden decir ✨"
+    ];
+
+    loveExtraBtn.addEventListener("click", () => {
+      let msg = mensajes[Math.floor(Math.random() * mensajes.length)];
+      loveExtra.textContent = msg;
+    });
+
+    // ---------------------------
+    // Eventos
+    startGameBtn.addEventListener("click", startGame);
+    tapBtn.addEventListener("click", tapHeart);
+    resetGameBtn.addEventListener("click", resetGame);
+
+    submitQuizBtn.addEventListener("click", submitQuiz);
+    resetQuizBtn.addEventListener("click", resetQuiz);
+  </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log("Service Worker registrado", reg))
+      .catch(err => console.error("Error al registrar SW", err));
+  }
+</script>
+</body>
+</html>
