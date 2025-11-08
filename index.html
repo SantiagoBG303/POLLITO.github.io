@@ -1,269 +1,890 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ff3b6d">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Perdóname, Pollito — Cielo y Estrellas</title>
+  <meta name="theme-color" content="#7cc1ff" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Quicksand:wght@400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-gradient: linear-gradient(180deg,#eaf6ff 0%, #f4fbff 30%, #f7f9ff 60%, #fefcff 100%);
+      --accent: #6ab7ff;
+      --accent-2: #8bd3ff;
+      --deep: #245b86;
+      --muted: #6b6b75;
+      --glass: rgba(255,255,255,0.75);
+      --card-radius: 22px;
+      --maxw: 980px;
+      --soft-shadow: 0 18px 48px rgba(36,91,134,0.08);
+    }
 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Para mi POLLITO — ¿Cuánto te amo te preguntas?</title>
-  <link rel="stylesheet" href="style3.css">
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg-gradient);
+      color:#10233b;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow:hidden;
+    }
+
+    /* App container */
+    .app {
+      width:100vw;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+
+    /* Carousel wrapper */
+    .carousel {
+      width:100%;
+      max-width:var(--maxw);
+      height:92vh;
+      border-radius:28px;
+      background: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.9), rgba(255,255,255,0.6) 30%), rgba(255,255,255,0.9);
+      box-shadow: var(--soft-shadow);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      position:relative;
+    }
+
+    /* Top bar */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 20px;
+      border-bottom:1px solid rgba(16,35,59,0.05);
+      background: linear-gradient(90deg, rgba(255,255,255,0.75), rgba(255,255,255,0.5));
+    }
+    .brand {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .logo {
+      width:56px;
+      height:56px;
+      border-radius:10px;
+      background: radial-gradient(circle at 30% 20%, #fff, #cfefff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:"Playfair Display", serif;
+      font-weight:700;
+      color:var(--deep);
+      font-size:20px;
+      box-shadow: 0 8px 22px rgba(36,91,134,0.06);
+    }
+    .brand h1{margin:0;font-size:18px;}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+
+    .top-controls{display:flex; gap:8px; align-items:center;}
+    .btn {
+      border: none;
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      color: white;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 8px 26px rgba(107,155,214,0.12);
+      transition: transform .16s ease, box-shadow .16s ease;
+    }
+    .btn.secondary{
+      background:transparent;
+      color: var(--deep);
+      border:2px solid rgba(36,91,134,0.06);
+      box-shadow:none;
+    }
+    .icon-btn {
+      background: rgba(255,255,255,0.6);
+      border-radius:12px;
+      padding:8px;
+      border:1px solid rgba(16,35,59,0.04);
+      cursor:pointer;
+    }
+
+    /* viewport and slides */
+    .viewport {
+      flex:1;
+      position:relative;
+      overflow:hidden;
+    }
+    .slides {
+      height:100%;
+      display:flex;
+      transition: transform 520ms cubic-bezier(.2,.9,.25,1);
+      will-change:transform;
+    }
+    .slide {
+      min-width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      position:relative;
+    }
+
+    /* Section card */
+    .card {
+      width:100%;
+      max-width:860px;
+      border-radius:20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(249,252,255,0.9));
+      padding:28px;
+      box-shadow: 0 14px 40px rgba(16,35,59,0.04);
+      text-align:center;
+      position:relative;
+    }
+    .card h2 {
+      margin:0;
+      font-family:"Playfair Display", serif;
+      font-size:26px;
+      color:var(--deep);
+    }
+    .card p{margin:8px 0 0; color:var(--muted); line-height:1.5}
+
+    /* footer controls */
+    .footer {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      padding:16px 20px;
+      border-top:1px solid rgba(16,35,59,0.03);
+      background: linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+    }
+    .dots {display:flex; gap:10px; align-items:center}
+    .dot {
+      width:12px; height:12px; border-radius:50%;
+      background: rgba(16,35,59,0.08);
+      transition: transform .18s, background .18s;
+    }
+    .dot.active { transform: scale(1.3); background:linear-gradient(90deg,var(--accent),var(--accent-2)); box-shadow: 0 6px 18px rgba(107,179,255,0.18) }
+
+    /* content specifics */
+    .big {
+      font-size:36px;
+      font-weight:800;
+      color:var(--deep);
+      margin: 6px 0 8px;
+    }
+    .subtitle { font-size:15px; color:var(--muted) }
+
+    /* input */
+    input[type="text"], textarea {
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid rgba(16,35,59,0.06);
+      font-size:15px;
+      outline:none;
+    }
+
+    /* game */
+    .game-area { display:flex; flex-direction:column; gap:12px; align-items:center; margin-top:10px; }
+    .meter { width:80%; height:18px; background: rgba(11,52,85,0.04); border-radius:10px; overflow:hidden; border:1px solid rgba(16,35,59,0.03) }
+    .meter > i { display:block; height:100%; width:0%; background: linear-gradient(90deg, #8fd0ff, #4db0ff); transition: width .16s; }
+
+    .tap-btn {
+      background:transparent;
+      border: 3px solid rgba(77,176,255,0.14);
+      padding:12px 18px;
+      border-radius:999px;
+      font-size:18px;
+      cursor:pointer;
+      box-shadow: 0 10px 30px rgba(77,176,255,0.06);
+    }
+
+    /* quiz */
+    .quiz { display:flex; flex-direction:column; gap:8px; text-align:left; margin-top:10px}
+    .quiz label { display:flex; gap:10px; align-items:center; padding:8px 10px; border-radius:10px; border:1px dashed rgba(77,176,255,0.06); cursor:pointer; }
+    .quiz input { accent-color: #4db0ff }
+
+    /* poem */
+    .poem {
+      white-space:pre-line;
+      margin-top:10px;
+      font-style:italic;
+      color:#17324a;
+      line-height:1.6;
+    }
+
+    /* stars/hearts decorations */
+    .sky {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+    }
+    .star {
+      position:absolute;
+      width:14px;
+      height:14px;
+      transform:translate(-50%,-50%);
+      opacity:0.95;
+      animation: rise var(--dur,8s) linear infinite;
+    }
+    .star svg { width:100%; height:100% }
+    @keyframes rise {
+      0% { transform: translateY(20vh) scale(0.9); opacity:1 }
+      100% { transform: translateY(-120vh) scale(1.2); opacity:0 }
+    }
+
+    /* responsive */
+    @media (max-width:720px){
+      .card{padding:18px;border-radius:14px}
+      .logo{width:46px;height:46px}
+      .brand h1{font-size:16px}
+      .big{font-size:30px}
+      .meter{width:92%}
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>¿Cuánto amo a mi pollin? 💖</h1>
-    <p class="intro">POLLITO, esta app la hice solo para ti, mi Pollito. Juega y descubre cuánto te amo.</p>
-  </header>
+  <div class="app">
+    <div class="carousel" role="application" aria-label="Perdóname, Pollito">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">P★</div>
+          <div>
+            <h1 id="headerName">Para ti, Pollito</h1>
+            <p>Un cielo pequeño para pedir perdón y prometer cariño</p>
+          </div>
+        </div>
+        <div class="top-controls">
+          <button class="icon-btn" id="musicToggle" title="Activar / Pausar música">🔈</button>
+          <button class="btn secondary" id="saveBtn">Guardar</button>
+        </div>
+      </div>
 
-  <main>
-    <!-- Nombre -->
-    <section class="card">
-      <h2>Tu nombre guardado</h2>
-      <input id="nameInput" type="text" placeholder="Tatiana" />
-      <button id="saveNameBtn">Guardar</button>
-      <p>Para: <strong id="byName">Tatiana</strong></p>
-    </section>
+      <div class="viewport">
+        <div class="slides" id="slides">
+          <!-- SLIDE 1: Intro / Bienvenida -->
+          <section class="slide">
+            <div class="card">
+              <h2>Hola, Pollito</h2>
+              <div class="big">Este cielo es para ti</div>
+              <p class="subtitle">Un espacio suave con estrellas y promesas. Aquí te pido perdón, te digo que te amo y quiero que sonrías otra vez.</p>
 
-    <!-- Juego de clicks -->
-    <section class="card">
-      <h2>Juego del Amor (toques)</h2>
-      <p>Toques: <span id="taps">0</span></p>
-      <p>Tiempo: <span id="timeLeft">10</span>s</p>
-      <div class="meter"><div id="loveMeter"></div></div>
-      <button id="startGameBtn">Iniciar</button>
-      <button id="tapBtn" disabled>💓 Tócame</button>
-      <button id="resetGameBtn" disabled>Reiniciar</button>
-    </section>
+              <div style="margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+                <input id="nameInput" type="text" placeholder="Escribe Pollito, Tatis o tu apodo favorito">
+                <button class="btn secondary" id="applyName">Aplicar</button>
+              </div>
 
-    <!-- Quiz -->
-    <section class="card">
-      <h2>Quiz del Amor</h2>
-      <form id="quizForm">
-        <p>¿Dónde nos conocimos?</p>
-        <label><input type="radio" name="q1" value="a"> En un parque 🌳</label><br>
-        <label><input type="radio" name="q1" value="b"> En una fiesta 🎉</label><br>
+              <div class="actions" style="margin-top:18px;">
+                <button class="btn" data-next>Comenzar</button>
+                <button class="btn secondary" id="skipToGame">Saltar al juego</button>
+              </div>
+            </div>
+            <div class="sky" id="sky1"></div>
+          </section>
 
-        <p>¿Dónde fue nuestra primera cita?</p>
-        <label><input type="radio" name="q2" value="a"> En un restaurante 🍽️</label><br>
-        <label><input type="radio" name="q2" value="b"> En un cine 🎬</label><br>
+          <!-- SLIDE 2: Confesión de Amor -->
+          <section class="slide">
+            <div class="card">
+              <h2>Te quiero, Pollito</h2>
+              <p class="subtitle">Aunque a veces me equivoque, mi amor por ti está claro como las estrellas. Aquí unas promesas sinceras:</p>
 
-        <p>¿Cuál es tu apodo?</p>
-        <label><input type="radio" name="q3" value="a"> Princesa 👑</label><br>
-        <label><input type="radio" name="q3" value="b"> Pollito 🐥</label><br>
-      </form>
-      <button id="submitQuizBtn">Enviar Quiz</button>
-      <button id="resetQuizBtn">Reiniciar Quiz</button>
-      <p>Puntaje Quiz: <span id="quizScore">0</span></p>
-    </section>
+              <ul style="text-align:left; margin:12px 90px; color:var(--muted)">
+                <li>Te escucharé con paciencia.</li>
+                <li>Valoraré tus silencios y celebraciones.</li>
+                <li>Trabajaré cada día para ser mejor para ti.</li>
+              </ul>
 
-    <!-- Resultados -->
-    <section class="card">
-      <h2>Resultados</h2>
-      <p>Total Amor: <span id="totalLove">0</span></p>
-      <p id="loveMessage">Sigue jugando, POLLITO…</p>
-      <button id="poemBtn">Ver poema</button>
-      <button id="shareBtn">Compartir 💌</button>
-    </section>
+              <div class="actions" style="margin-top:12px;">
+                <button class="btn" data-next>Siguiente</button>
+                <button class="btn secondary" data-prev>Anterior</button>
+              </div>
+            </div>
+            <div class="sky" id="sky2"></div>
+          </section>
 
-    <!-- Nueva Sorpresa -->
-    <section class="card">
-      <h2>💌 Sorpresa de Amor</h2>
-      <p>Haz clic y recibe un mensaje romántico inesperado:</p>
-      <button id="loveExtraBtn">Dame Amor 💕</button>
-      <p id="loveExtra">Aquí aparecerá tu mensaje, Pollito 🐥</p>
-    </section>
-  </main>
+          <!-- SLIDE 3: Disculpa creativa -->
+          <section class="slide">
+            <div class="card">
+              <h2>Perdóname por mis torpezas</h2>
+              <p class="subtitle">No quiero que mis errores sean la sombra de lo que somos. Aquí tienes algunas excusas que suenan bien pero son sinceras:</p>
 
-  <footer>
-    <p>Hecho con 💖 para Tatiana (Pollito)</p>
-  </footer>
+              <div style="display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;">
+                <button class="btn" id="gentleApology">Dime algo tierno</button>
+                <button class="btn secondary" id="shortSorry">Perdón breve</button>
+                <button class="btn secondary" id="promiseButton">Promesa</button>
+              </div>
+
+              <p id="apologyBox" style="margin-top:12px; color:var(--muted)"></p>
+
+              <div class="actions" style="margin-top:12px;">
+                <button class="btn" data-next>Siguiente</button>
+                <button class="btn secondary" data-prev>Anterior</button>
+              </div>
+            </div>
+            <div class="sky" id="sky3"></div>
+          </section>
+
+          <!-- SLIDE 4: Juego del Perdón -->
+          <section class="slide">
+            <div class="card">
+              <h2>Juego: Recupera mi abrazo</h2>
+              <p class="subtitle">Toca la estrella rápida y llena el medidor. Cada toque representa un gesto real que haré por ti.</p>
+
+              <div class="game-area">
+                <div class="meter"><i id="meterFill"></i></div>
+                <div style="display:flex; gap:12px; align-items:center;">
+                  <button class="tap-btn" id="tapStar">✨ Toca</button>
+                  <button class="btn secondary" id="startBtn">Iniciar</button>
+                  <button class="btn secondary" id="resetBtn">Reiniciar</button>
+                </div>
+                <p style="color:var(--muted)">Toques: <strong id="touchCount">0</strong> · Tiempo: <strong id="timeRem">10</strong>s</p>
+              </div>
+
+              <div class="actions" style="margin-top:12px;">
+                <button class="btn" data-next>Siguiente</button>
+                <button class="btn secondary" data-prev>Anterior</button>
+              </div>
+            </div>
+            <div class="sky" id="sky4"></div>
+            <div class="sky" id="gameSky" style="z-index:3"></div>
+          </section>
+
+          <!-- SLIDE 5: Cuestionario tierno -->
+          <section class="slide">
+            <div class="card">
+              <h2>Cuestionario de sonrisas</h2>
+              <p class="subtitle">Contesta para mostrar que me conoces (o para divertirte). No hay respuestas malas.</p>
+
+              <form id="pollQuiz" class="quiz">
+                <div>
+                  <p><strong>1.</strong> ¿Cuál es el plan perfecto conmigo?</p>
+                  <label><input type="radio" name="q1" value="a"> Paseo al atardecer</label>
+                  <label><input type="radio" name="q1" value="b"> Noche de películas y mantita</label>
+                </div>
+
+                <div>
+                  <p><strong>2.</strong> ¿Qué te hace sonreír instantáneamente?</p>
+                  <label><input type="radio" name="q2" value="a"> Mensajes inesperados</label>
+                  <label><input type="radio" name="q2" value="b"> Abrazos sorpresa</label>
+                </div>
+
+                <div>
+                  <p><strong>3.</strong> ¿Cómo te gusta que te llame?</p>
+                  <label><input type="radio" name="q3" value="a"> Pollito</label>
+                  <label><input type="radio" name="q3" value="b"> Tatis</label>
+                </div>
+              </form>
+
+              <div style="margin-top:10px;">
+                <button class="btn" id="submitQuiz">Enviar</button>
+                <button class="btn secondary" id="clearQuiz">Limpiar</button>
+                <p id="quizMsg" style="margin-top:10px;color:var(--muted)"></p>
+              </div>
+
+              <div class="actions" style="margin-top:12px;">
+                <button class="btn" data-next>Siguiente</button>
+                <button class="btn secondary" data-prev>Anterior</button>
+              </div>
+            </div>
+            <div class="sky" id="sky5"></div>
+          </section>
+
+          <!-- SLIDE 6: Poema de estrellas -->
+          <section class="slide">
+            <div class="card">
+              <h2>Poema bajo las estrellas</h2>
+              <p class="subtitle">Un texto corto que puedes guardar o compartir.</p>
+
+              <div class="poem" id="poemArea">
+A ti, mi Pollito de luz:
+En la noche te pienso y cuento estrellas.
+Cada una es un motivo para volver a intentar,
+para aprender y para regalar paz.
+Perdóname si alguna vez fui tormenta;
+quiero ser brisa que te abrace y que te deje sonreír.
+              </div>
+
+              <div style="margin-top:12px;">
+                <button class="btn" id="copyPoem">Copiar poema</button>
+                <button class="btn secondary" id="sharePoem">Compartir poema</button>
+              </div>
+
+              <div class="actions" style="margin-top:12px;">
+                <button class="btn" data-next>Final</button>
+                <button class="btn secondary" data-prev>Anterior</button>
+              </div>
+            </div>
+            <div class="sky" id="sky6"></div>
+          </section>
+
+          <!-- SLIDE 7: Final / Resultado -->
+          <section class="slide">
+            <div class="card">
+              <h2>Un último pedido</h2>
+              <p id="finalLine" class="subtitle">Pollito, perdoname por ser tan grosero d everdad es que aveces pienso que no me amas o que estas mejor sin mi y me frustra y es pq casi no nos vemos y por cositas que pasan, prometo llenar tus días de pequeñas estrellas y gestos.</p>
+
+              <div style="margin-top:12px">
+                <p style="font-weight:800; font-size:20px; color:var(--deep)">Puntaje de cariño: <span id="finalScore">0</span>%</p>
+                <p style="color:var(--muted)" id="finalNote">Acciones + promesas = cariño real.</p>
+              </div>
+
+              <div style="margin-top:12px;" class="actions">
+                <button class="btn" id="sendFinal">Enviar mensaje</button>
+                <button class="btn secondary" id="restart">Volver a empezar</button>
+              </div>
+            </div>
+            <div class="sky" id="sky7"></div>
+          </section>
+        </div>
+
+        <!-- decorative global stars -->
+        <div class="sky" id="globalSky" style="z-index:0"></div>
+      </div>
+
+      <div class="footer">
+        <div class="dots" id="dots"></div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="icon-btn" id="prevBtn" aria-label="Anterior">◀</button>
+          <button class="icon-btn" id="nextBtn" aria-label="Siguiente">▶</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Música (puedes reemplazar el src por una URL real o archivo local) -->
+  <audio id="bgAudio" loop crossorigin>
+    <!-- placeholder silent tiny file to prevent autoplay error if browser blocks empty src -->
+    <source src="data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCAAwADAAgA" type="audio/mp3">
+  </audio>
 
   <script>
-    let taps = 0;
+    /******************************
+     * Navegación entre pantallas *
+     ******************************/
+    const slides = document.getElementById('slides');
+    const slideList = Array.from(document.querySelectorAll('.slide'));
+    const dotsContainer = document.getElementById('dots');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const totalSlides = slideList.length;
+    let current = 0;
+
+    // crear dots
+    for (let i=0;i<totalSlides;i++){
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i===0 ? ' active' : '');
+      dot.dataset.index = i;
+      dot.addEventListener('click', ()=>goTo(i));
+      dotsContainer.appendChild(dot);
+    }
+
+    function updateDots() {
+      Array.from(dotsContainer.children).forEach((d, idx)=> d.classList.toggle('active', idx === current));
+    }
+
+    function goTo(i){
+      current = Math.max(0, Math.min(totalSlides-1, i));
+      slides.style.transform = `translateX(-${current * 100}%)`;
+      updateDots();
+    }
+
+    nextBtn.addEventListener('click', ()=> goTo(current + 1));
+    prevBtn.addEventListener('click', ()=> goTo(current - 1));
+    document.querySelectorAll('[data-next]').forEach(b=>b.addEventListener('click', ()=>goTo(current+1)));
+    document.querySelectorAll('[data-prev]').forEach(b=>b.addEventListener('click', ()=>goTo(current-1)));
+
+    // keyboard
+    window.addEventListener('keydown', (e)=> {
+      if (e.key === 'ArrowRight') goTo(current + 1);
+      if (e.key === 'ArrowLeft') goTo(current - 1);
+      if (e.key === 'Escape') goTo(0);
+    });
+
+    /******************************
+     * Personalización del nombre *
+     ******************************/
+    const headerName = document.getElementById('headerName');
+    const nameInput = document.getElementById('nameInput');
+    const applyNameBtn = document.getElementById('applyName');
+
+    function setName(n){
+      if (!n) n = 'Pollito';
+      headerName.textContent = `Para ti, ${n}`;
+      localStorage.setItem('pn_name', n);
+      // personalizamos algunas zonas
+      document.getElementById('finalLine').textContent = `${n}, si me das otra oportunidad, prometo llenar tus días de pequeñas estrellas y gestos.`;
+      // actualizar poema con nombre
+      const poemEl = document.getElementById('poemArea');
+      const basePoem = `A ti, mi ${n} de luz:
+En la noche te pienso y cuento estrellas.
+Cada una es un motivo para volver a intentar,
+para aprender y para regalar paz.
+Perdóname si alguna vez fui tormenta;
+quiero ser brisa que te abrace y que te deje sonreír.`;
+      poemEl.textContent = basePoem;
+    }
+
+    applyNameBtn.addEventListener('click', ()=>{
+      const v = nameInput.value.trim();
+      if(!v){ alert('Escribe un apodo lindo, por ejemplo: Pollito o Tatis'); return; }
+      setName(v);
+      toast('Nombre aplicado 💙');
+    });
+
+    // cargar guardado
+    window.addEventListener('load', ()=>{
+      const saved = localStorage.getItem('pn_name');
+      if(saved) {
+        setName(saved);
+        nameInput.value = saved;
+      }
+      // iniciar cielo global
+      initGlobalSky();
+    });
+
+    /******************************
+     * Mensajes de disculpa       *
+     ******************************/
+    const gentleApology = document.getElementById('gentleApology');
+    const shortSorry = document.getElementById('shortSorry');
+    const promiseButton = document.getElementById('promiseButton');
+    const apologyBox = document.getElementById('apologyBox');
+
+    const apologies = [
+      "Pollito, perdóname. Mi intención nunca es hacerte sentir mal ni que llores; solo quiero aprender a ser mejor para ti.",
+      "Lo siento, peque. A veces me equivoco, pero siempre vuelvo a ti con ganas de arreglarlo.",
+      "Sé que me equivoqué y quiero demostrarte con hechos que puedo cambiar.",
+      "Perdóname por mis palabras torpes; te mereces ternura y cuidado siempre."
+    ];
+
+    document.getElementById('gentleApology').addEventListener('click', ()=>{
+      apologyBox.textContent = apologies[Math.floor(Math.random()*apologies.length)];
+    });
+    document.getElementById('shortSorry').addEventListener('click', ()=>{
+      apologyBox.textContent = "Lo siento, Pollito. 💙";
+    });
+    document.getElementById('promiseButton').addEventListener('click', ()=>{
+      apologyBox.textContent = "Prometo escuchar, aprender y abrazarte más. — Tu persona que te ama.";
+    });
+
+    /******************************
+     * Juego: tocar estrellas     *
+     ******************************/
+    const meterFill = document.getElementById('meterFill');
+    const tapStar = document.getElementById('tapStar');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const touchCountEl = document.getElementById('touchCount');
+    const timeRemEl = document.getElementById('timeRem');
+    const gameSky = document.getElementById('gameSky');
+
+    let touches = 0;
     let timeLeft = 10;
-    let timerInterval = null;
-    let quizScore = 0;
+    let gameTimer = null;
+    let gamePlaying = false;
 
-    const tapsSpan = document.getElementById("taps");
-    const timeLeftSpan = document.getElementById("timeLeft");
-    const loveMeter = document.getElementById("loveMeter");
-    const startGameBtn = document.getElementById("startGameBtn");
-    const tapBtn = document.getElementById("tapBtn");
-    const resetGameBtn = document.getElementById("resetGameBtn");
+    function updateGameUI(){
+      const percent = Math.min(100, Math.round((touches / 30) * 100));
+      meterFill.style.width = percent + '%';
+      touchCountEl.textContent = touches;
+      timeRemEl.textContent = timeLeft;
+    }
 
-    const quizForm = document.getElementById("quizForm");
-    const quizScoreSpan = document.getElementById("quizScore");
-    const submitQuizBtn = document.getElementById("submitQuizBtn");
-    const resetQuizBtn = document.getElementById("resetQuizBtn");
-
-    const totalLoveSpan = document.getElementById("totalLove");
-    const loveMessage = document.getElementById("loveMessage");
-
-    const saveNameBtn = document.getElementById("saveNameBtn");
-    const nameInput = document.getElementById("nameInput");
-    const byName = document.getElementById("byName");
-
-    const poemBtn = document.getElementById("poemBtn");
-    const shareBtn = document.getElementById("shareBtn");
-
-    const loveExtraBtn = document.getElementById("loveExtraBtn");
-    const loveExtra = document.getElementById("loveExtra");
-
-    // ---------------------------
-    // Juego de toques
-    function startGame() {
-      taps = 0;
-      timeLeft = 10;
-      tapsSpan.textContent = taps;
-      timeLeftSpan.textContent = timeLeft;
-      loveMeter.style.width = "0%";
-
-      tapBtn.disabled = false;
-      resetGameBtn.disabled = false;
-      startGameBtn.disabled = true;
-
-      timerInterval = setInterval(() => {
+    function startGame(){
+      touches = 0; timeLeft = 10; gamePlaying = true;
+      updateGameUI();
+      startBtn.disabled = true;
+      tapStar.disabled = false;
+      resetBtn.disabled = false;
+      // spawn a few stars as targets
+      spawnStar(gameSky, true);
+      gameTimer = setInterval(()=>{
         timeLeft--;
-        timeLeftSpan.textContent = timeLeft;
-        if (timeLeft <= 0) {
-          endGame();
-        }
+        updateGameUI();
+        if (timeLeft <= 0) endGame();
       }, 1000);
     }
 
-    function tapHeart() {
-      taps++;
-      tapsSpan.textContent = taps;
-      let percent = Math.min((taps / 50) * 100, 100);
-      loveMeter.style.width = percent + "%";
+    function tapAction(){
+      if(!gamePlaying) return;
+      touches++;
+      updateGameUI();
+      spawnStar(gameSky, false); // small burst each tap
+      // place small star burst
+      spawnStarBurst(gameSky, 6);
     }
 
-    function endGame() {
-      clearInterval(timerInterval);
-      tapBtn.disabled = true;
-      startGameBtn.disabled = false;
-      updateTotalLove();
+    function endGame(){
+      gamePlaying = false;
+      clearInterval(gameTimer);
+      startBtn.disabled = false;
+      tapStar.disabled = true;
+      const percent = Math.min(100, Math.round((touches / 30) * 100));
+      localStorage.setItem('pn_game', percent);
+      // celebracion o aliento
+      if(percent >= 70){
+        spawnStarBurst(gameSky, 18);
+        toast(`¡Lograste mi sonrisa! ${percent}% 🌟`);
+      } else {
+        toast(`Intento registrado: ${percent}%. Puedes volver a intentar 💪`);
+      }
+      updateFinalScore();
     }
 
-    function resetGame() {
-      clearInterval(timerInterval);
-      taps = 0;
-      timeLeft = 10;
-      tapsSpan.textContent = taps;
-      timeLeftSpan.textContent = timeLeft;
-      loveMeter.style.width = "0%";
-
-      tapBtn.disabled = true;
-      resetGameBtn.disabled = true;
-      startGameBtn.disabled = false;
+    function resetGame(){
+      clearInterval(gameTimer);
+      touches = 0; timeLeft = 10;
+      gamePlaying = false;
+      meterFill.style.width = '0%';
+      touchCountEl.textContent = '0';
+      timeRemEl.textContent = '10';
+      startBtn.disabled = false;
+      tapStar.disabled = true;
+      resetBtn.disabled = true;
+      localStorage.removeItem('pn_game');
+      updateFinalScore();
     }
 
-    // ---------------------------
-    // Quiz
-    function submitQuiz() {
-      let formData = new FormData(quizForm);
+    startBtn.addEventListener('click', startGame);
+    tapStar.addEventListener('click', tapAction);
+    resetBtn.addEventListener('click', resetGame);
+    // desactivar tap al inicio
+    tapStar.disabled = true;
+    resetBtn.disabled = true;
+
+    /******************************
+     * Corazones/estrellas float  *
+     ******************************/
+    function rand(min, max){ return Math.random() * (max - min) + min }
+
+    function spawnStar(container, big){
+      const el = document.createElement('div');
+      el.className = 'star';
+      const size = big ? rand(20,48) : rand(10,28);
+      el.style.width = size + 'px';
+      el.style.height = size + 'px';
+      el.style.left = rand(5,95) + '%';
+      el.style.bottom = rand(-20, 10) + '%';
+      el.style.opacity = rand(0.5,0.95);
+      el.style.setProperty('--dur', (rand(6,14))+'s');
+      el.style.zIndex = 2;
+      const hue = rand(190, 220);
+      el.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="hsl(${hue} 90% 60%)" d="M12 21s-7-4.35-9.2-7.1C-0.2 9.2 4.3 4 8.6 6.1 10.3 7 12 9 12 9s1.7-2 3.4-2.9c4.3-2.1 8.8 3.1 5.8 7.8C19 16.65 12 21 12 21z"/></svg>`;
+      container.appendChild(el);
+      setTimeout(()=>el.remove(), 16000);
+      return el;
+    }
+
+    function spawnStarBurst(container, n){
+      for(let i=0;i<n;i++){
+        setTimeout(()=>spawnStar(container, false), i*70);
+      }
+    }
+
+    // global sky initialization
+    function initGlobalSky(){
+      const globalSky = document.getElementById('globalSky');
+      // spawn many subtle stars
+      for(let i=0;i<20;i++){
+        setTimeout(()=>spawnStar(globalSky, true), i*220);
+      }
+      // keep spawning slowly
+      setInterval(()=>spawnStar(globalSky, false), 1200);
+    }
+
+    /******************************
+     * Quiz logic                 *
+     ******************************/
+    const pollQuiz = document.getElementById('pollQuiz');
+    const submitQuiz = document.getElementById('submitQuiz');
+    const clearQuiz = document.getElementById('clearQuiz');
+    const quizMsg = document.getElementById('quizMsg');
+
+    submitQuiz.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const fd = new FormData(pollQuiz);
       let score = 0;
-
-      if (formData.get("q1") === "a") score++;
-      if (formData.get("q2") === "b") score++;
-      if (formData.get("q3") === "b") score++;
-
-      quizScore = score;
-      quizScoreSpan.textContent = quizScore;
-      updateTotalLove();
-    }
-
-    function resetQuiz() {
-      quizForm.reset();
-      quizScore = 0;
-      quizScoreSpan.textContent = 0;
-      updateTotalLove();
-    }
-
-    // ---------------------------
-    // Resultados
-    function updateTotalLove() {
-      let total = taps + quizScore * 10;
-      totalLoveSpan.textContent = total;
-
-      if (total < 20) {
-        loveMessage.textContent = "Tatiana, te amo poquito pero sincero 💕";
-      } else if (total < 50) {
-        loveMessage.textContent = "Tatiana, te amo muchísimo, Pollito 🐥💖";
-      } else {
-        loveMessage.textContent = "Tatiana, eres mi TODO, mi Pollito eterno 💍💘";
-      }
-    }
-
-    // ---------------------------
-    // Nombre guardado
-    saveNameBtn.addEventListener("click", () => {
-      let name = nameInput.value || "Tatiana";
-      localStorage.setItem("tatianaName", name);
-      byName.textContent = name;
+      if(fd.get('q1') === 'b') score += 1;
+      if(fd.get('q2') === 'b') score += 1;
+      if(fd.get('q3') === 'a' || fd.get('q3') === 'b') score += 1; // either pollito/tatis counts
+      quizMsg.textContent = `Resultado: ${score}/3 — ${score === 3 ? 'Eres un/a experto/a del cariño' : '¡Qué linda intención!'}`;
+      localStorage.setItem('pn_quiz', score);
+      updateFinalScore();
     });
 
-    window.addEventListener("load", () => {
-      let saved = localStorage.getItem("tatianaName");
-      if (saved) {
-        byName.textContent = saved;
-        nameInput.value = saved;
+    clearQuiz.addEventListener('click', (e)=>{
+      e.preventDefault();
+      pollQuiz.reset();
+      quizMsg.textContent = '';
+      localStorage.removeItem('pn_quiz');
+      updateFinalScore();
+    });
+
+    /******************************
+     * Poema: copiar y compartir  *
+     ******************************/
+    const copyPoemBtn = document.getElementById('copyPoem');
+    const sharePoemBtn = document.getElementById('sharePoem');
+
+    copyPoemBtn.addEventListener('click', async ()=>{
+      const text = document.getElementById('poemArea').textContent;
+      try{
+        await navigator.clipboard.writeText(text);
+        toast('Poema copiado ✨');
+      }catch(e){
+        alert('No se pudo copiar automáticamente. Selecciona y copia manualmente.');
       }
     });
 
-    // ---------------------------
-    // Poema
-    poemBtn.addEventListener("click", () => {
-      alert(`Tatiana, mi Pollito 🐥
-
-Eres la luz de mis días,
-mi parque de alegría,
-mi cine de sonrisas,
-y mi razón de amar. 💖`);
-    });
-
-    // ---------------------------
-    // Compartir
-    shareBtn.addEventListener("click", async () => {
-      const text = `Tatiana, mi Pollito 🐥 💖
-Mira cuánto te amo en esta app que hice para ti.`;
-      if (navigator.share) {
-        await navigator.share({ title: "Para Tatiana", text });
-      } else {
-        alert("Copia este mensaje para Tatiana:\n\n" + text);
+    sharePoemBtn.addEventListener('click', ()=>{
+      const text = document.getElementById('poemArea').textContent;
+      if(navigator.share){
+        navigator.share({title: 'Poema para ti, Pollito', text}).catch(()=>toast('Compartir cancelado'));
+      }else{
+        navigator.clipboard.writeText(text).then(()=>toast('Poema copiado para compartir 💌')).catch(()=>alert(text));
       }
     });
 
-    // ---------------------------
-    // Mensajes de Amor Extra
-    const mensajes = [
-      "Tatiana, contigo todo es mejor 💖",
-      "Mi Pollito, eres el regalo más lindo de mi vida 🐥",
-      "Tatiana, gracias por ser mi alegría diaria 🌸",
-      "Eres mi parque de felicidad y mi cine de sonrisas 🎬💕",
-      "Te amo más de lo que las palabras pueden decir ✨"
-    ];
+    /******************************
+     * Final: score y compartir   *
+     ******************************/
+    function updateFinalScore(){
+      const g = parseInt(localStorage.getItem('pn_game') || 0);
+      const qRaw = parseInt(localStorage.getItem('pn_quiz') || 0); // 0-3
+      const q = Math.round((qRaw/3) * 100);
+      const name = localStorage.getItem('pn_name') ? 100 : 0;
+      // weights: juego 60%, quiz 30%, name 10%
+      const total = Math.round(g*0.6 + q*0.3 + name*0.1);
+      document.getElementById('finalScore').textContent = total;
+      return total;
+    }
 
-    loveExtraBtn.addEventListener("click", () => {
-      let msg = mensajes[Math.floor(Math.random() * mensajes.length)];
-      loveExtra.textContent = msg;
+    document.getElementById('sendFinal').addEventListener('click', ()=>{
+      const nm = localStorage.getItem('pn_name') || 'Pollito';
+      const score = updateFinalScore();
+      const text = `Para ${nm}: te pido perdón y te ofrezco mi cariño. Puntuación de cariño: ${score}%. Prometo demostrarlo cada día. 🌟`;
+      if(navigator.share){
+        navigator.share({title:'Perdóname, Pollito', text}).catch(()=>toast('Compartir cancelado'));
+      }else{
+        navigator.clipboard.writeText(text).then(()=>toast('Mensaje copiado 💌')).catch(()=>alert(text));
+      }
     });
 
-    // ---------------------------
-    // Eventos
-    startGameBtn.addEventListener("click", startGame);
-    tapBtn.addEventListener("click", tapHeart);
-    resetGameBtn.addEventListener("click", resetGame);
+    document.getElementById('restart').addEventListener('click', ()=>{
+      // limpiar
+      localStorage.removeItem('pn_game');
+      localStorage.removeItem('pn_quiz');
+      // no borramos el nombre porque es bonito conservarlo
+      resetGame();
+      pollQuiz.reset();
+      document.getElementById('quizMsg').textContent = '';
+      updateFinalScore();
+      goTo(0);
+    });
 
-    submitQuizBtn.addEventListener("click", submitQuiz);
-    resetQuizBtn.addEventListener("click", resetQuiz);
+    /******************************
+     * Música toggle              *
+     ******************************/
+    const musicToggle = document.getElementById('musicToggle');
+    const bgAudio = document.getElementById('bgAudio');
+    // placeholder; you can replace with a public URL or local file:
+    // bgAudio.src = 'https://example.com/lofi-romantic.mp3';
+    let musicActive = false;
+    musicToggle.addEventListener('click', async ()=>{
+      if(!musicActive){
+        try{
+          await bgAudio.play();
+          musicActive = true;
+          musicToggle.textContent = '🔊';
+          musicToggle.style.background = 'linear-gradient(90deg,var(--accent),var(--accent-2))';
+          musicToggle.style.color = '#fff';
+          toast('Música activada 🎵');
+        }catch(e){
+          musicActive = false;
+          alert('No se pudo reproducir. Si quieres agrega un archivo de audio o permite sonido en tu navegador.');
+        }
+      }else{
+        bgAudio.pause();
+        musicActive = false;
+        musicToggle.textContent = '🔈';
+        musicToggle.style.background = '';
+        musicToggle.style.color = '';
+        toast('Música pausada');
+      }
+    });
+
+    /******************************
+     * Pequeñas utilidades UI     *
+     ******************************/
+    function toast(msg, time=2200){
+      const el = document.createElement('div');
+      el.textContent = msg;
+      el.style.position = 'fixed';
+      el.style.left = '50%';
+      el.style.bottom = '6%';
+      el.style.transform = 'translateX(-50%)';
+      el.style.background = 'rgba(16,35,59,0.82)';
+      el.style.color = '#fff';
+      el.style.padding = '10px 16px';
+      el.style.borderRadius = '12px';
+      el.style.zIndex = 99999;
+      el.style.boxShadow = '0 8px 30px rgba(16,35,59,0.4)';
+      document.body.appendChild(el);
+      setTimeout(()=>{ el.style.transition = 'opacity .3s'; el.style.opacity = 0; }, time-300);
+      setTimeout(()=>el.remove(), time);
+    }
+
+    // helper to clamp
+    function goTo(i){ current = Math.max(0, Math.min(totalSlides-1, i)); slides.style.transform = `translateX(-${current * 100}%)`; updateDots(); }
+
+    /******************************
+     * Pequeños extras visuales    *
+     ******************************/
+    // show a star burst on load
+    window.addEventListener('load', ()=> {
+      initGlobalSky();
+      setTimeout(()=> spawnStarBurst(document.getElementById('globalSky'), 10), 400);
+      updateFinalScore();
+    });
+
+    // Skip to game
+    document.getElementById('skipToGame').addEventListener('click', ()=> goTo(3));
+
+    /******************************
+     * Guardado rápido            *
+     ******************************/
+    document.getElementById('saveBtn').addEventListener('click', ()=>{
+      const nm = nameInput.value.trim();
+      if(nm) localStorage.setItem('pn_name', nm);
+      toast('Progreso guardado ✨');
+    });
+
+    /******************************
+     * Accessibility / misc       *
+     ******************************/
+    // allow double-click on cards to forward
+    document.querySelectorAll('.card').forEach((c)=> {
+      c.addEventListener('dblclick', ()=> goTo(current+1));
+    });
+
+    // small clamp check
+    setInterval(()=> {
+      if(current < 0) current = 0;
+      if(current > totalSlides-1) current = totalSlides-1;
+    }, 1000);
+
+    /******************************
+     * End of script              *
+     ******************************/
   </script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log("Service Worker registrado", reg))
-      .catch(err => console.error("Error al registrar SW", err));
-  }
-</script>
 </body>
 </html>
